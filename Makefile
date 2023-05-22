@@ -14,3 +14,6 @@ style:
 
 hooks:
 	pre-commit install -t pre-commit
+
+run:
+	uvicorn src.app.main:app --reload
