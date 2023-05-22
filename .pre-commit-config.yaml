@@ -4,6 +4,6 @@ repos:
     - id: check
       name: check
       entry: make check
-      language: python
+      language: system
       types: [python]
       stages: [commit]

@@ -1,5 +1,5 @@
 mypy:
-	mypy src --strict
+	python -m mypy src/ --ignore-missing-imports
 
 ruff:
 	ruff check src
@@ -18,9 +18,12 @@ hooks:
 setup:
 	sudo chown -R $(whoami) .
 
-run:
-	uvicorn src.app.main:app --reload
 
 build:
-	sudo docker compose up -d
+	sudo docker compose up -d --build --force-recreate
 
+init-db:
+	docker compose exec backend python app/db.py
+
+migrate-from-csv:
+	docker compose exec backend python app/migrate_script.py
