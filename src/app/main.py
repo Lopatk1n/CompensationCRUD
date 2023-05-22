@@ -1,8 +1,13 @@
+import pydantic
 from fastapi import FastAPI
+from app.settings import get_settings
+from app.views import router
 
-app = FastAPI()
 
+settings: pydantic.BaseSettings = get_settings()
 
-@app.get("/ping/")
-async def ping() -> str:
-    return "pong"
+app = FastAPI(
+    title="WaveAccess Test Task",
+)
+
+app.include_router(router)
