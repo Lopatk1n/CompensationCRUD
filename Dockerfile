@@ -11,5 +11,3 @@ COPY pyproject.toml .
 COPY poetry.lock .
 
 RUN poetry install --no-interaction --no-ansi --no-root
-# RUN echo $(ls -a)
-# COPY src/app /app
