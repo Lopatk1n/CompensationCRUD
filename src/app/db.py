@@ -1,7 +1,9 @@
-from sqlalchemy import create_engine, Engine
+from typing import Generator
+
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
-from settings import get_settings
-from models import Base
+
+from app.settings import get_settings
 
 settings = get_settings()
 
@@ -15,8 +17,12 @@ DATABASE_URL = (
 )
 
 engine: Engine = create_engine(DATABASE_URL)
-
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-if __name__ == "__main__":
-    Base.metadata.create_all(bind=engine)
+
+def get_db() -> Generator:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

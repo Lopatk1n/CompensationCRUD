@@ -2,7 +2,7 @@ FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 ENV CGO_ENABLED 1
 
-WORKDIR /app
+WORKDIR /src
 RUN pip install poetry
 RUN poetry config virtualenvs.create false
 

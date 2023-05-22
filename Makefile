@@ -11,6 +11,7 @@ check: mypy ruff black
 
 style:
 	black src
+	isort src
 
 hooks:
 	pre-commit install -t pre-commit
@@ -18,12 +19,8 @@ hooks:
 setup:
 	sudo chown -R $(whoami) .
 
-
 build:
 	sudo docker compose up -d --build --force-recreate
 
-init-db:
-	docker compose exec backend python app/db.py
-
 migrate-from-csv:
-	docker compose exec backend python app/migrate_script.py
+	sudo docker compose exec backend python app/migrate_script.py

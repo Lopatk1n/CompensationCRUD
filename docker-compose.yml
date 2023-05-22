@@ -13,7 +13,7 @@ services:
     volumes:
       - type: bind
         source: src
-        target: /app
+        target: /src
     depends_on:
       - db
     restart: always

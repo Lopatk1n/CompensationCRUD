@@ -1,7 +1,12 @@
-from db import engine
 import csv
+import sys
+from os.path import abspath, dirname
+
 from sqlalchemy.orm import Session
-from models import Compensation
+
+sys.path.append(dirname(dirname(abspath(__file__))))
+from app.db import engine  # noqa
+from app.models import Base, Compensation  # noqa
 
 
 def migrate_from_csv(path: str) -> None:
@@ -56,4 +61,5 @@ def migrate_from_csv(path: str) -> None:
 
 
 if __name__ == "__main__":
+    Base.metadata.create_all(bind=engine)
     migrate_from_csv("datasets/salary_survey.csv")
