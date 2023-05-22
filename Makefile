@@ -22,4 +22,5 @@ run:
 	uvicorn src.app.main:app --reload
 
 build:
-	sudo docker build -t app .
+	sudo docker compose up -d
+
