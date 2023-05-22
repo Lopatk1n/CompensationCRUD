@@ -15,5 +15,11 @@ style:
 hooks:
 	pre-commit install -t pre-commit
 
+setup:
+	sudo chown -R $(whoami) .
+
 run:
 	uvicorn src.app.main:app --reload
+
+build:
+	sudo docker build -t app .
