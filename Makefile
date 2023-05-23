@@ -16,8 +16,9 @@ style:
 hooks:
 	pre-commit install -t pre-commit
 
-setup:
+configure-env:
 	sudo chown -R $(whoami) .
+	cp .env-example .env
 
 build:
 	sudo docker compose up -d --build --force-recreate
@@ -27,3 +28,5 @@ migrate:
 
 test:
 	docker compose exec backend python -m pytest -s
+
+setup: hooks build migrate check
