@@ -30,7 +30,7 @@ def match_plus(s: str) -> bool:
     return False
 
 
-def convert_empty_strings_to_none(row: Any) -> dict:
+def prepare_row_for_saving(row: Any) -> dict:
     if not hasattr(row, "items"):
         raise TypeError("row must be a dict-like object")
     for key, value in row.items():
@@ -79,7 +79,7 @@ def migrate_from_csv(path: str) -> None:
     with open(path) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            row = convert_empty_strings_to_none(row)
+            row = prepare_row_for_saving(row)
             compensation = Compensation(
                 timestamp=row["Timestamp"],
                 employment_type=row["Employment Type"],

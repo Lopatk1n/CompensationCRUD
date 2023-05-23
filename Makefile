@@ -24,3 +24,6 @@ build:
 
 migrate:
 	sudo docker compose exec backend python app/migrate_script.py
+
+test:
+	docker compose exec backend python -m pytest -s
