@@ -29,4 +29,8 @@ migrate:
 test:
 	docker compose exec backend python -m pytest -s
 
-setup: hooks build migrate check
+requirements:
+	pip install poetry
+	poetry update
+
+setup: requirements hooks build migrate check
