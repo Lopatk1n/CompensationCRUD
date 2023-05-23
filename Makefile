@@ -33,4 +33,4 @@ requirements:
 	pip install poetry
 	poetry update
 
-setup: requirements hooks build migrate check
+setup: requirements hooks configure-env build migrate check
