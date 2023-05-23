@@ -3,7 +3,7 @@ from typing import Generator
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.settings import get_settings
+from app.settings import get_settings  # noqa
 
 settings = get_settings()
 
@@ -17,12 +17,12 @@ DATABASE_URL = (
 )
 
 engine: Engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def get_db() -> Generator:
-    db = SessionLocal()
+def yield_session() -> Generator:
+    s = session()
     try:
-        yield db
+        yield s
     finally:
-        db.close()
+        s.close()

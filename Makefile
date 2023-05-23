@@ -22,5 +22,5 @@ setup:
 build:
 	sudo docker compose up -d --build --force-recreate
 
-migrate-from-csv:
+migrate:
 	sudo docker compose exec backend python app/migrate_script.py

@@ -1,12 +1,76 @@
 import csv
+import re
 import sys
+from datetime import datetime
 from os.path import abspath, dirname
+from typing import Any
 
 from sqlalchemy.orm import Session
 
 sys.path.append(dirname(dirname(abspath(__file__))))
 from app.db import engine  # noqa
 from app.models import Base, Compensation  # noqa
+
+MAX_INT = 2147483647
+
+
+def is_float(s: str) -> bool:
+    return bool(re.match("^\d+\.?\d*$", s))  # noqa
+
+
+def match_range(s: str) -> bool:
+    if re.match(r"^\d+-\d+$", s):
+        return True
+    return False
+
+
+def match_plus(s: str) -> bool:
+    if re.match(r"^\d+\+", s):
+        return True
+    return False
+
+
+def convert_empty_strings_to_none(row: Any) -> dict:
+    if not hasattr(row, "items"):
+        raise TypeError("row must be a dict-like object")
+    for key, value in row.items():
+        if value is None:
+            continue
+
+        if value.replace(" ", "") == "":
+            row[key] = None
+            continue
+
+        # convert to real timestamp
+        try:
+            value = int(datetime.strptime(value, "%m/%d/%Y %H:%M:%S").timestamp())
+            row[key] = value
+            continue
+        except ValueError:
+            pass
+
+        if match_range(value):
+            row[key] = value.split("-")[-1]
+            continue
+
+        if is_float(value):
+            row[key] = str(int(float(value)))
+            continue
+
+        if match_plus(value):
+            value = value.replace("+", "")
+
+        # convert to int
+        try:
+            value = int(value)
+            # if value more than BigInteger limit it by BigInt max
+            if value > MAX_INT:
+                row[key] = MAX_INT
+            row[key] = str(value)
+        except ValueError:
+            pass
+
+    return row
 
 
 def migrate_from_csv(path: str) -> None:
@@ -15,6 +79,7 @@ def migrate_from_csv(path: str) -> None:
     with open(path) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            row = convert_empty_strings_to_none(row)
             compensation = Compensation(
                 timestamp=row["Timestamp"],
                 employment_type=row["Employment Type"],
